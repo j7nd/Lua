@@ -8,10 +8,11 @@ res - the output table
 list - input list
 
 Service params (are only used to pass parameters in recursive function calls):
+taken - list of taken elements
 first - first element from the remaining list
 --]]
 
-function calculate(res, list, first)
+function calculate(res, list, taken, first)
 	
 	-- any better way to initialize variables?	
 	if not taken then 
@@ -28,18 +29,25 @@ function calculate(res, list, first)
 		return true
 	end	
 	
-	-- NOT taking the element. If not  base case, add the first remaining element 
+	-- NOT taking the element. If not base case, add the first remaining element 
 	-- to taken for it to be added to second branch result
-	if not calculate(res, table.move(list, 2, #list, 1, {})) then
+	if not calculate(
+			res, 
+			table.move(list, 2, #list, 1, {}), 
+			table.move(taken, 1, #taken, 1, {})
+			) 
+	then
 		table.insert(taken, list[1])
 	end
 
-	-- TAKING the first element, which is then added to all taken elements and 
-	-- added to the result. If going up the recursive tree, remove the last 
-	-- element from taken not to use it anymore
-	if not calculate(res, table.move(list, 2, #list, 1, {}), list[1]) then
-		taken[#taken] = nil
-	end
+	-- TAKING the first element, which is then added to taken elements and added
+	-- to the result
+	calculate(
+			res, 
+			table.move(list, 2, #list, 1, {}), 
+			table.move(taken, 1, #taken, 1, {}), 
+			list[1]
+			)
 end
 
 -- function to output the result
