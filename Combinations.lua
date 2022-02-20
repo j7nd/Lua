@@ -44,9 +44,9 @@ end
 
 -- function to output the result
 function printres(r)
-	for i=1, #res do
+	for i=1, #r do
 		io.write("[ ")
-		for j=1, #res[i] do
+		for j=1, #r[i] do
 			io.write(res[i][j], " ")
 		end
 		io.write("]\n")
